@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlogCMS - Content Management System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>BlogCMS</h1>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="#" class="nav-link active" data-page="home" aria-label="Home page">
+                    <span class="nav-icon">🏠</span>
+                    Home
+                </a>
+                <a href="#" class="nav-link" data-page="create" aria-label="Create new post">
+                    <span class="nav-icon">✏️</span>
+                    Create
+                </a>
+                <a href="#" class="nav-link" data-page="manage" aria-label="Manage posts">
+                    <span class="nav-icon">📋</span>
+                    Manage
+                </a>
+                <a href="#" class="nav-link" data-page="categories" aria-label="Manage categories">
+                    <span class="nav-icon">🏷️</span>
+                    Categories
+                </a>
+            </div>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Page -->
+        <section id="home-page" class="page active">
+            <div class="container">
+                <header class="page-header">
+                    <h2>Welcome to BlogCMS</h2>
+                    <p>Manage your blog content with ease</p>
+                </header>
+
+                <!-- Search and Filters -->
+                <div class="search-section">
+                    <div class="search-container">
+                        <input type="text" id="search-input" placeholder="Search posts..." aria-label="Search posts">
+                        <button id="search-btn" aria-label="Search">🔍</button>
+                    </div>
+                    <div class="filter-container">
+                        <select id="category-filter" aria-label="Filter by category">
+                            <option value="">All Categories</option>
+                        </select>
+                        <select id="sort-filter" aria-label="Sort posts">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="title">Title A-Z</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Posts Grid -->
+                <div class="posts-grid" id="posts-grid">
+                    <div class="no-posts" id="no-posts">
+                        <h3>No posts found</h3>
+                        <p>Start by creating your first blog post!</p>
+                        <button class="btn btn-primary" data-page="create">Create Post</button>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination"></div>
+            </div>
+        </section>
+
+        <!-- Create/Edit Post Page -->
+        <section id="create-page" class="page">
+            <div class="container">
+                <header class="page-header">
+                    <h2 id="create-title">Create New Post</h2>
+                    <button class="btn btn-secondary" data-page="home">← Back to Home</button>
+                </header>
+
+                <form id="post-form" class="post-form" novalidate>
+                    <div class="form-group">
+                        <label for="post-title">Title *</label>
+                        <input type="text" id="post-title" name="title" required aria-describedby="title-error">
+                        <div class="error-message" id="title-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="post-slug">URL Slug</label>
+                        <input type="text" id="post-slug" name="slug" aria-describedby="slug-help">
+                        <small id="slug-help">Auto-generated from title if left empty</small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="post-category">Category</label>
+                            <select id="post-category" name="category">
+                                <option value="">Select Category</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="post-status">Status</label>
+                            <select id="post-status" name="status">
+                                <option value="draft">Draft</option>
+                                <option value="published">Published</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="post-excerpt">Excerpt</label>
+                        <textarea id="post-excerpt" name="excerpt" rows="3" placeholder="Brief description of the post..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="post-content">Content *</label>
+                        <div class="editor-toolbar">
+                            <button type="button" class="editor-btn" data-command="bold" title="Bold">
+                                <strong>B</strong>
+                            </button>
+                            <button type="button" class="editor-btn" data-command="italic" title="Italic">
+                                <em>I</em>
+                            </button>
+                            <button type="button" class="editor-btn" data-command="underline" title="Underline">
+                                <u>U</u>
+                            </button>
+                            <button type="button" class="editor-btn" data-command="insertUnorderedList" title="Bullet List">
+                                •
+                            </button>
+                            <button type="button" class="editor-btn" data-command="insertOrderedList" title="Numbered List">
+                                1.
+                            </button>
+                        </div>
+                        <div id="post-content" class="content-editor" contenteditable="true" aria-describedby="content-error" role="textbox" aria-multiline="true"></div>
+                        <div class="error-message" id="content-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="post-tags">Tags</label>
+                        <input type="text" id="post-tags" name="tags" placeholder="Enter tags separated by commas">
+                        <small>Separate multiple tags with commas</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-page="home">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="save-btn">
+                            <span class="btn-text">Save Post</span>
+                            <span class="btn-loading hidden">Saving...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Manage Posts Page -->
+        <section id="manage-page" class="page">
+            <div class="container">
+                <header class="page-header">
+                    <h2>Manage Posts</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-danger" id="delete-selected" disabled>Delete Selected</button>
+                        <button class="btn btn-primary" data-page="create">Create New Post</button>
+                    </div>
+                </header>
+
+                <div class="manage-filters">
+                    <input type="text" id="manage-search" placeholder="Search posts..." aria-label="Search posts">
+                    <select id="manage-status-filter" aria-label="Filter by status">
+                        <option value="">All Status</option>
+                        <option value="published">Published</option>
+                        <option value="draft">Draft</option>
+                    </select>
+                </div>
+
+                <div class="posts-table-container">
+                    <table class="posts-table" id="posts-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all" aria-label="Select all posts">
+                                </th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="posts-table-body">
+                            <tr class="no-posts-row">
+                                <td colspan="6">No posts found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Page -->
+        <section id="categories-page" class="page">
+            <div class="container">
+                <header class="page-header">
+                    <h2>Manage Categories</h2>
+                    <button class="btn btn-primary" id="add-category-btn">Add Category</button>
+                </header>
+
+                <div class="categories-grid" id="categories-grid">
+                    <div class="no-categories" id="no-categories">
+                        <h3>No categories found</h3>
+                        <p>Create your first category to organize your posts!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Category Modal -->
+    <div class="modal" id="category-modal" role="dialog" aria-labelledby="category-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="category-modal-title">Add Category</h3>
+                <button class="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <form id="category-form" class="modal-body">
+                <div class="form-group">
+                    <label for="category-name">Category Name *</label>
+                    <input type="text" id="category-name" name="name" required>
+                    <div class="error-message" id="category-name-error"></div>
+                </div>
+                <div class="form-group">
+                    <label for="category-description">Description</label>
+                    <textarea id="category-description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="category-color">Color</label>
+                    <input type="color" id="category-color" name="color" value="#3b82f6">
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary modal-close">Cancel</button>
+                <button type="submit" form="category-form" class="btn btn-primary">Save Category</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirm-modal" role="dialog" aria-labelledby="confirm-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirm-modal-title">Confirm Action</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="confirm-cancel">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirm-ok">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
